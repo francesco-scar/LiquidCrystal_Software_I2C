@@ -1,0 +1,16 @@
+{
+  "name": "LiquidCrystal_Software_I2C",
+  "keywords": "LCD, liquidcrystal, I2C, Software",
+  "description": "A library to use I2C LCD displays with any Arduino IO pin, generating I2C protocol in software, rather than in hardware",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/francesco-scar/LiquidCrystal_Software_I2C.git"
+  },
+  "frameworks": "arduino",
+  "platforms":
+  [
+    "atmelavr",
+    "espressif8266"
+  ]
+}
