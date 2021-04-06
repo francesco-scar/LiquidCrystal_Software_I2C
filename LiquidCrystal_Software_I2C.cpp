@@ -237,6 +237,16 @@ void LiquidCrystal_I2C::backlight(void) {
     expanderWrite(0);
 }
 
+// Brute force all addresses from 0 to 127
+void LiquidCrystal_I2C::searchAddresses(uint8_t *resultArray) {
+    for (uint8_t i = 0; i < 128; i++) {
+        if (!writeI2C(i, LCD_BACKLIGHT)) {                      // Try turn on backlight, if NACK is received returns 1 or 2, 0 if ACK
+            *resultArray = i;                                   // Store valid address in array
+            resultArray++;                                      // Increase array pointer
+        }
+    }
+}
+
 
 
 /*********** mid level commands, for sending data/cmds */
@@ -273,7 +283,7 @@ void LiquidCrystal_I2C::pulseEnable(uint8_t _data){
     delayMicroseconds(50);        // commands need > 37us to settle
 } 
 
-void LiquidCrystal_I2C::writeI2C(uint8_t _Addr, uint8_t _data){
+uint8_t LiquidCrystal_I2C::writeI2C(uint8_t _Addr, uint8_t _data){
     /* This is the function that actually sends data in I2C protocol
      * it has a similar function of:
      *   Wire.begin();
@@ -312,7 +322,7 @@ void LiquidCrystal_I2C::writeI2C(uint8_t _Addr, uint8_t _data){
     digitalWrite(_scl_pin, HIGH);
     
     if (digitalRead(_sda_pin) == 1){    // Received NACK flag
-        return;
+        return 1;
     }
     
     delayMicroseconds(5);
@@ -334,7 +344,7 @@ void LiquidCrystal_I2C::writeI2C(uint8_t _Addr, uint8_t _data){
     digitalWrite(_scl_pin, HIGH);
     
     if (digitalRead(_sda_pin) == 1){    // Received NACK flag
-        return;
+        return 2;
     }
     
     delayMicroseconds(5);
@@ -347,6 +357,8 @@ void LiquidCrystal_I2C::writeI2C(uint8_t _Addr, uint8_t _data){
     digitalWrite(_scl_pin, HIGH);
     delayMicroseconds(5);
     digitalWrite(_sda_pin, HIGH);
+    
+    return 0;
 }
 
 
